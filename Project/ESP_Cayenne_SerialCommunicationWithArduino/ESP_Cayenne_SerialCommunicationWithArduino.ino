@@ -1,12 +1,15 @@
+
+// this code will be uploaded on esp8266-12E
 #define CAYENNE_PRINT Serial
 #include <CayenneMQTTESP8266.h>
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 
 
-char ssid[] = "SSID_Name";
-char wifiPassword[] = "SSID_Password";
+char ssid[] = "IoTCodeLab";//ssid 
+char wifiPassword[] = "@IoTCodeLab";//password
 
+// Cayenne authentication info. This should be obtained from the Cayenne Dashboard.
 char username[] = "3e72ac20-2fda-11ea-8221-599f77add412";
 char password[] = "eae77232abd1253b73d71fe288af32330089f050";
 char clientID[] = "9c05e730-2fda-11ea-84bb-8f71124cfdfb";
@@ -54,7 +57,7 @@ void handleIndex()
   // Send a JSON-formatted request with key "type" and value "request"
   // then parse the JSON-formatted response with keys "gas" and "distance"
   DynamicJsonDocument doc(1024);
-  double gas = 0, distance = 0;
+  double current = 0, unit = 0;
   // Sending the request
   doc["type"] = "request";
   serializeJson(doc,Serial);
@@ -75,19 +78,19 @@ void handleIndex()
     Serial.println(error.c_str());
     return;
   }
-  distance = doc["distance"];
-  gas = doc["gas"];
+  current = doc["current"];
+  unit = doc["unit"];
   
   /// ADC0 - CHANNEL 2  
-  Cayenne.virtualWrite(2, distance);
+  Cayenne.virtualWrite(2, current);
   delay(100);
   
 /// ADC0 - CHANNEL 3  
-  Cayenne.virtualWrite(3, gas);
+  Cayenne.virtualWrite(3, unit);
   delay(100);
   
-  Serial.println(distance);
-  Serial.println(gas);
+  Serial.println(current);
+  Serial.println(unit);
 
 
 }

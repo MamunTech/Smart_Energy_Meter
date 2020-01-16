@@ -3,8 +3,12 @@
 /* Use software serial for the PZEM
  * Pin 10 Rx (Connects to the Tx pin on the PZEM)
  * Pin 11 Tx (Connects to the Rx pin on the PZEM)
+ * 
 */
-PZEM004Tv30 pzem(10, 11);
+int D0=16;
+int D1=5;
+
+PZEM004Tv30 pzem(3, 1);//rx, tx 
 
 float E_bill=0;
 float total_bill=0;
