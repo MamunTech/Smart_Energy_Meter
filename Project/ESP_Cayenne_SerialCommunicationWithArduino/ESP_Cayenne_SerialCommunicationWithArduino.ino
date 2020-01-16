@@ -30,23 +30,6 @@ void loop()
   
 Cayenne.loop();
 
-/*
-  /// ADC0 - CHANNEL 0  ,this is a virtual channel
-  Cayenne.virtualWrite(0, 20.05);
-  // Cayenne.virtualWrite(1, 0  );
-  
-  
-  /// ADC0 - CHANNEL 2, this is a virtual channel  
-  Cayenne.virtualWrite(2, distance);
-  delay(500);
-  
-/// ADC0 - CHANNEL 3,  this is a virtual channel  
-  Cayenne.virtualWrite(3, gas);
-  delay(500);
-
-*/
-
-
   handleIndex();
 
   delay(3000);
@@ -57,7 +40,7 @@ void handleIndex()
   // Send a JSON-formatted request with key "type" and value "request"
   // then parse the JSON-formatted response with keys "gas" and "distance"
   DynamicJsonDocument doc(1024);
-  double current = 0, unit = 0;
+  double curr = 0, unit = 0;
   // Sending the request
   doc["type"] = "request";
   serializeJson(doc,Serial);
@@ -78,18 +61,18 @@ void handleIndex()
     Serial.println(error.c_str());
     return;
   }
-  current = doc["current"];
+  curr = doc["current"];
   unit = doc["unit"];
   
   /// ADC0 - CHANNEL 2  
-  Cayenne.virtualWrite(2, current);
+  Cayenne.virtualWrite(2, curr);
   delay(100);
   
 /// ADC0 - CHANNEL 3  
   Cayenne.virtualWrite(3, unit);
   delay(100);
   
-  Serial.println(current);
+  Serial.println(curr);
   Serial.println(unit);
 
 
