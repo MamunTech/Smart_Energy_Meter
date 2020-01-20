@@ -2,7 +2,8 @@
 #include <String.h>
  
 SoftwareSerial mySerial(2,3); //RX and TX
- 
+
+
 void setup()
 {
   mySerial.begin(9600);               // the GPRS baud rate   
@@ -14,7 +15,7 @@ void loop()
 {
   //after start up the program, you can using terminal to connect the serial of gprs shield,
   //if you input 't' in the terminal, the program will execute SendTextMessage(), it will show how to send a sms message,
-  //if input 'd' in the terminal, it will execute DialVoiceCall(), etc.
+  
  
   if (Serial.available())
     switch(Serial.read())
@@ -25,7 +26,7 @@ void loop()
      case 'd':
        DialVoiceCall();
        break;
-   
+    
    } 
   if (mySerial.available())
     Serial.write(mySerial.read());
@@ -45,8 +46,7 @@ void SendTextMessage()
   delay(100);
   mySerial.println();
 }
- 
-///DialVoiceCall
+ ///DialVoiceCall
 ///this function is to dial a voice call
 void DialVoiceCall()
 {
@@ -54,4 +54,4 @@ void DialVoiceCall()
   delay(100);
   mySerial.println();
 }
- 
+

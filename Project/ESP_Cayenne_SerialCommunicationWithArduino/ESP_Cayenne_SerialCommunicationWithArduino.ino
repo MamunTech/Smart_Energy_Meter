@@ -1,4 +1,6 @@
 
+float unit_cost=5.5;// per unit cost 5.5 tk
+
 // this code will be uploaded on esp8266-12E
 #define CAYENNE_PRINT Serial
 #include <CayenneMQTTESP8266.h>
@@ -14,7 +16,7 @@ char username[] = "3e72ac20-2fda-11ea-8221-599f77add412";
 char password[] = "eae77232abd1253b73d71fe288af32330089f050";
 char clientID[] = "9c05e730-2fda-11ea-84bb-8f71124cfdfb";
 
-
+double i=0;
 
 void setup()
 {
@@ -27,20 +29,21 @@ void setup()
 
 void loop()
 {
-  
-Cayenne.loop();
-
-  handleIndex();
-
-  delay(3000);
+Cayenne.loop(); 
+  i++;
+  if(i==1000){
+    handleIndex();
+    i=0;
+   }
 }
-
 void handleIndex()
+
 {
   // Send a JSON-formatted request with key "type" and value "request"
   // then parse the JSON-formatted response with keys "gas" and "distance"
-  DynamicJsonDocument doc(1024);
-  double curr = 0, unit = 0;
+  DynamicJsonDocument doc(256);//allocate 256 if not working then allocate 1024 or 2048 and more if not working.
+                                    //but remamber them more you allocate the more space then the flash memory then  it willl create problem ( ArduinoJson version 6+)
+  double cur = 0, unit = 0;
   // Sending the request
   doc["type"] = "request";
   serializeJson(doc,Serial);
@@ -61,24 +64,25 @@ void handleIndex()
     Serial.println(error.c_str());
     return;
   }
-  curr = doc["current"];
+  cur = doc["cur"];
   unit = doc["unit"];
   
   /// ADC0 - CHANNEL 2  
-  Cayenne.virtualWrite(2, curr);
+  Cayenne.virtualWrite(2, cur);
   delay(100);
   
 /// ADC0 - CHANNEL 3  
   Cayenne.virtualWrite(3, unit);
   delay(100);
+
+/// ADC0 - CHANNEL 4  
+  Cayenne.virtualWrite(4, unit*unit_cost);
+  delay(100);
   
-  Serial.println(curr);
+  Serial.println(cur);
   Serial.println(unit);
 
-
 }
-
-
 
 
 CAYENNE_IN_DEFAULT()
