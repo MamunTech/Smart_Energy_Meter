@@ -1,5 +1,5 @@
 //
-int CurrentLimit=1; //Consumer current limit.alarm sms will be send, if user use more than 1unit or 1kwh 
+int CurrentLimit=2; //Consumer current limit.alarm sms will be send, if user use more than 2A
 float unit_cost=5.5; // per unit cost 5.5 tk
 
 //For GSM Start
@@ -133,29 +133,31 @@ void setup() {
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("Current: ");
-  lcd.setCursor(15,0);
+  lcd.setCursor(17,0);
   lcd.print("A");
 
-  lcd.clear();
+  
   lcd.setCursor(0,1);
-  lcd.print("Volatage: ");
-  lcd.setCursor(15,1);
+  lcd.print("Volatage:");
+  lcd.setCursor(17,1);
   lcd.print("V");
   
   lcd.setCursor(0,2);
   lcd.print("Unit   : ");
-  lcd.setCursor(15,2);
+  lcd.setCursor(17,2);
   lcd.print("KWh");
   
   lcd.setCursor(0,3);
   lcd.print("Bill   : ");
-  lcd.setCursor(15,3);
+  lcd.setCursor(17,3);
   lcd.print("TK");
    //For LCD test END 
-  delay(100);
-  pzem03();
-  delay(10);
-  LcdDisplay();
+  
+  for(int j=0;j<5;j++){
+    pzem03();
+    delay(10);
+   LcdDisplay();
+  }
   
 }
 
@@ -192,13 +194,15 @@ void loop() {
     }
     messageReady = false;
   }
-  if(i==500){
+ if(i==100){
     pzem03();
     LcdDisplay();//show on LCD Display
     i=0;
   }
+  /*
   if(unit>9000){
      pzem.resetEnergy();//reset pzrm unit,Since pzem v03 can only mesure upto 9999.99 unit
     }
+    */
   i++;
 }

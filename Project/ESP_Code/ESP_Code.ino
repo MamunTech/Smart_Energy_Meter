@@ -16,7 +16,7 @@ char username[] = "3e72ac20-2fda-11ea-8221-599f77add412";
 char password[] = "eae77232abd1253b73d71fe288af32330089f050";
 char clientID[] = "9c05e730-2fda-11ea-84bb-8f71124cfdfb";
 
-double i=0;
+
 
 void setup()
 {
@@ -30,14 +30,12 @@ void setup()
 void loop()
 {
 Cayenne.loop(); 
-  i++;
-  if(i==1000){
+  
     handleIndex();
-    i=0;
-   }
+    delay(2000);
+   
 }
 void handleIndex()
-
 {
   // Send a JSON-formatted request with key "type" and value "request"
   // then parse the JSON-formatted response with keys "gas" and "distance"
@@ -76,7 +74,8 @@ void handleIndex()
   delay(100);
 
 /// ADC0 - CHANNEL 4  
-  Cayenne.virtualWrite(4, unit*unit_cost);
+  float total=unit*unit_cost;
+  Cayenne.virtualWrite(4,total);
   delay(100);
   
   Serial.println(cur);
