@@ -199,32 +199,31 @@ void loop() {
     pzem03();
     LcdDisplay();//show on LCD Display
     i=0;
-    
     /* //to understand the time needed to run the full code at once
      *  unsigned long time_needed_run_once_full_code=start-millis();
      *  Serial.println(time_needed_run_once_full_code) //the time will be printed in milli second
      */
-   
   }
+  
  if(A>CurrentLimit && j==0){
           SendTextMessage();
-          if(j>=1){
-            j++;
-            if(A>CurrentLimit && j==1000){
-               SendTextMessage();
-               j=1;
-              }
-            else{
-               j=0;
-              }
-            }
-        }
-  
+          j++;
+  }        
+ if(j>=1){
+     j++;
+     if(A>CurrentLimit && j==3000){
+        SendTextMessage();
+        j=1;
+       }
+     if(A<CurrentLimit && j==3000)
+      {
+        j=0;
+       }
+  }
   /*
   if(unit>9000){
      pzem.resetEnergy();//reset pzrm unit,Since pzem v03 can only mesure upto 9999.99 unit
     }
     */
-  i++;
-  
+  i++; 
 }
