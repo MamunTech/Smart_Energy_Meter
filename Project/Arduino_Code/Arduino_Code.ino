@@ -40,7 +40,8 @@ bool messageReady = false;
 float ESP_D4_to_A0=0.0; //connect esp D4 pin to arduino A0 pin
 int relay_on_off=13;
 
-double i=0;
+int i=0;
+int j=0;
 
 void SendTextMessage()
 {
@@ -207,6 +208,16 @@ void loop() {
   }
  if(A>CurrentLimit && j==0){
           SendTextMessage();
+          if(j>=1){
+            j++;
+            if(A>CurrentLimit && j==1000){
+               SendTextMessage();
+               j=1;
+              }
+            else{
+               j=0;
+              }
+            }
         }
   
   /*
@@ -215,4 +226,5 @@ void loop() {
     }
     */
   i++;
+  
 }
