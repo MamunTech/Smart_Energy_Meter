@@ -2,6 +2,9 @@
 int CurrentLimit=2; //Consumer current limit.alarm sms will be send, if user use more than 2A
 float unit_cost=5.5; // per unit cost 5.5 tk
 
+
+#include <TimerOne.h> //for creating interrupt
+
 //For GSM Start
 #include <SoftwareSerial.h>
 #include <String.h>
@@ -110,6 +113,33 @@ void LcdDisplay(){
         }
     }
 
+   void updateAndCheck()//this function will be execute once in every 8 seconds
+   {
+    pzem03();
+    delay(10);
+    LcdDisplay();//show on LCD Display
+    relay();
+    
+    if(A>CurrentLimit && i==0){
+          SendTextMessage();
+          i++;
+        }
+    if(i>=1){
+      i++;
+                                  //since this code run onece in every 8 seconds
+      if(A>CurrentLimit && i==40) //So 40 times=5+ min;if after 5+ min current is still high then,it will recursively send sms each 5+ min 
+      {
+        SendTextMessage();
+        i=1;
+        }
+      else   //if after 5+ min current is low then the sms will not be sent
+      {
+        i=0;
+        }
+      
+      }
+    }
+
 void setup() {
   pinMode(relay_on_off,OUTPUT);
   mySerial.begin(9600);               // the GPRS baud rate
@@ -155,7 +185,11 @@ void setup() {
     pzem03();
     delay(10);
    LcdDisplay();
+   
   }
+
+  Timer1.initialize(8000000);
+  Timer1.attachInterrupt(updateAndCheck); // blinkLED to run every 8 seconds
   
 }
 
@@ -163,7 +197,6 @@ void loop() {
   /* //the "start" variable is declared to understand the time needed to run the full code at once
    * unsigned long start=millis();
    */
-    relay();
   while(Serial.available()) {
     message = Serial.readString();
     messageReady = true;
@@ -194,25 +227,15 @@ void loop() {
     }
     messageReady = false;
   }
- if(i==100){
-    pzem03();
-    LcdDisplay();//show on LCD Display
-    i=0;
-    
-    /* //to understand the time needed to run the full code at once
-     *  unsigned long time_needed_run_once_full_code=start-millis();
-     *  Serial.println(time_needed_run_once_full_code) //the time will be printed in milli second
-     */
-   
-  }
- if(A>CurrentLimit && j==0){
-          SendTextMessage();
-        }
-  
+
   /*
   if(unit>9000){
      pzem.resetEnergy();//reset pzrm unit,Since pzem v03 can only mesure upto 9999.99 unit
     }
     */
-  i++;
+
+    /* //to understand the time needed to run the full code at once
+     *  unsigned long time_needed_run_once_full_code=start-millis();
+     *  Serial.println(time_needed_run_once_full_code) //the time will be printed in milli second
+     */
 }
