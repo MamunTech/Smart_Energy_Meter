@@ -61,9 +61,7 @@ void pzem03(){
     float current = pzem.current();
     if( !isnan(current) ){
       A=current;
-      if(A>CurrentLimit){
-          SendTextMessage();
-        }
+      
     } 
     else {
         A=0;
@@ -162,8 +160,10 @@ void setup() {
 }
 
 void loop() {
+  /* //the "start" variable is declared to understand the time needed to run the full code at once
+   * unsigned long start=millis();
+   */
     relay();
-
   while(Serial.available()) {
     message = Serial.readString();
     messageReady = true;
@@ -198,7 +198,17 @@ void loop() {
     pzem03();
     LcdDisplay();//show on LCD Display
     i=0;
+    
+    /* //to understand the time needed to run the full code at once
+     *  unsigned long time_needed_run_once_full_code=start-millis();
+     *  Serial.println(time_needed_run_once_full_code) //the time will be printed in milli second
+     */
+   
   }
+ if(A>CurrentLimit && j==0){
+          SendTextMessage();
+        }
+  
   /*
   if(unit>9000){
      pzem.resetEnergy();//reset pzrm unit,Since pzem v03 can only mesure upto 9999.99 unit
