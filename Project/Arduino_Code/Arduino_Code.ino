@@ -132,7 +132,7 @@ void LcdDisplay(){
         SendTextMessage();
         i=1;
         }
-      else   //if after 5+ min current is low then the sms will not be sent
+      if(A<CurrentLimit && i==40)   //if after 5+ min current is low then the sms will not be sent
       {
         i=0;
         }
