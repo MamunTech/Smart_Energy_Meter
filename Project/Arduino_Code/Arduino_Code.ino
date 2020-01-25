@@ -1,5 +1,5 @@
 //
-int CurrentLimit=2; //Consumer current limit.alarm sms will be send, if user use more than 2A
+int CurrentLimit=1; //Consumer current limit.alarm sms will be send, if user use more than 1A
 float unit_cost=5.5; // per unit cost 5.5 tk
 
 //For GSM Start
@@ -211,11 +211,11 @@ void loop() {
   }        
  if(j>=1){
      j++;
-     if(A>CurrentLimit && j==3000){
+     if(A>CurrentLimit && j>30000){
         SendTextMessage();
         j=1;
        }
-     if(A<CurrentLimit && j==3000)
+     if(A<CurrentLimit && j>30000)
       {
         j=0;
        }
