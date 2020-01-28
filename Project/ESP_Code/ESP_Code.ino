@@ -39,9 +39,9 @@ void handleIndex()
 {
   // Send a JSON-formatted request with key "type" and value "request"
   // then parse the JSON-formatted response with keys "gas" and "distance"
-  DynamicJsonDocument doc(256);//allocate 256 if not working then allocate 1024 or 2048 and more if not working.
+  DynamicJsonDocument doc(1024);//allocate 256 if not working then allocate 1024 or 2048 and more if not working.
                                     //but remamber them more you allocate the more space then the flash memory then  it willl create problem ( ArduinoJson version 6+)
-  double cur = 0, unit = 0;
+  double cur = 0, unit = 0,tk=0;
   // Sending the request
   doc["type"] = "request";
   serializeJson(doc,Serial);
@@ -64,6 +64,7 @@ void handleIndex()
   }
   cur = doc["cur"];
   unit = doc["unit"];
+  tk = doc["tk"];
   
   /// ADC0 - CHANNEL 2  
   Cayenne.virtualWrite(2, cur);
@@ -74,12 +75,12 @@ void handleIndex()
   delay(100);
 
 /// ADC0 - CHANNEL 4  
-  float total=unit*unit_cost;
-  Cayenne.virtualWrite(4,total);
+  Cayenne.virtualWrite(4,tk);
   delay(100);
   
   Serial.println(cur);
   Serial.println(unit);
+  Serial.println(tk);
 
 }
 

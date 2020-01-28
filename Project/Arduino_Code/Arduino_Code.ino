@@ -1,6 +1,8 @@
 //
 int CurrentLimit=1; //Consumer current limit.alarm sms will be send, if user use more than 1A
 float unit_cost=5.5; // per unit cost 5.5 tk
+float cost=0.0;
+float fine=0.0; //fine for extra use
 
 //For GSM Start
 #include <SoftwareSerial.h>
@@ -95,7 +97,7 @@ void LcdDisplay(){
   lcd.setCursor(9,2);
   lcd.print(unit);
   lcd.setCursor(9,3);
-  float cost=unit * unit_cost;
+  cost=(unit * unit_cost)+fine;
   lcd.print(cost);
   }
   
@@ -172,7 +174,7 @@ void loop() {
   // Only process message if there's one
   if(messageReady) {
     // The only messages we'll parse will be formatted in JSON
-    DynamicJsonDocument doc(256); //allocate 256 if not working then allocate 1024 or 2048 and more if not working.
+    DynamicJsonDocument doc(1024); //allocate 256 if not working then allocate 1024 or 2048 and more if not working.
                                     //but remamber them more you allocate the more space then the flash memory then  it willl create problem ( ArduinoJson version 6+)
     // Attempt to deserialize the message
     DeserializationError error = deserializeJson(doc,message);
@@ -188,6 +190,7 @@ void loop() {
       // Get data from analog sensors
       doc["cur"] = A;
       doc["unit"] = unit;
+      doc["tk"]=cost;
       serializeJson(doc,Serial);
        //Serial.println(A);
       //Serial.println(W);
@@ -207,12 +210,14 @@ void loop() {
   
  if(A>CurrentLimit && j==0){
           SendTextMessage();
+          fine=fine+5.0;//fine for extra use
           j++;
   }        
  if(j>=1){
      j++;
      if(A>CurrentLimit && j>30000){
         SendTextMessage();
+        fine=fine+5.0;//fine for extra use
         j=1;
        }
      if(A<CurrentLimit && j>30000)
