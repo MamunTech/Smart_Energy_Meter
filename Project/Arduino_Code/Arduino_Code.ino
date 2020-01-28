@@ -2,6 +2,7 @@
 int CurrentLimit=1; //Consumer current limit.alarm sms will be send, if user use more than 1A
 float unit_cost=5.5; // per unit cost 5.5 tk
 float cost=0.0;
+float fine_amount=5.0;
 float fine=0.0; //fine for extra use
 
 //For GSM Start
@@ -210,14 +211,14 @@ void loop() {
   
  if(A>CurrentLimit && j==0){
           SendTextMessage();
-          fine=fine+5.0;//fine for extra use
+          fine=fine+fine_amount;//fine for extra use
           j++;
   }        
  if(j>=1){
      j++;
      if(A>CurrentLimit && j>30000){
         SendTextMessage();
-        fine=fine+5.0;//fine for extra use
+        fine=fine+fine_amount;//fine for extra use
         j=1;
        }
      if(A<CurrentLimit && j>30000)
