@@ -1,5 +1,5 @@
 
-float unit_cost=5.5;// per unit cost 5.5 tk
+//float unit_cost=5.5;// per unit cost 5.5 tk
 
 // this code will be uploaded on esp8266-12E
 #define CAYENNE_PRINT Serial
@@ -78,9 +78,9 @@ void handleIndex()
   Cayenne.virtualWrite(4,tk);
   delay(100);
   
-  Serial.println(cur);
-  Serial.println(unit);
-  Serial.println(tk);
+  //Serial.println(cur);
+  //Serial.println(unit);
+  //Serial.println(tk);
 
 }
 
