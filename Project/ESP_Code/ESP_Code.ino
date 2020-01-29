@@ -70,17 +70,24 @@ void handleIndex()
   Cayenne.virtualWrite(2, cur);
   delay(100);
   
-/// ADC0 - CHANNEL 3  
+/// ADC0 - CHANNEL 3 
   Cayenne.virtualWrite(3, unit);
   delay(100);
 
+int bill=round(tk);
+float fine=(tk-bill)*1000;
+
 /// ADC0 - CHANNEL 4  
-  Cayenne.virtualWrite(4,tk);
+  Cayenne.virtualWrite(4,bill);
+  delay(100);
+
+  /// ADC0 - CHANNEL 5  
+  Cayenne.virtualWrite(5,fine);
   delay(100);
   
-  //Serial.println(cur);
-  //Serial.println(unit);
-  //Serial.println(tk);
+  Serial.println(cur);
+  Serial.println(unit);
+  Serial.println(tk);
 
 }
 

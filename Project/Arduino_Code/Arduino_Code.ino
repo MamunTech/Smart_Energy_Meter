@@ -2,8 +2,14 @@
 int CurrentLimit=1; //Consumer current limit.alarm sms will be send, if user use more than 1A
 float unit_cost=5.5; // per unit cost 5.5 tk
 float cost=0.0;
-float fine_amount=5.0;
+float fine_amount=20.0;//per unit 15 for fine
 float fine=0.0; //fine for extra use
+float total_fine = 0.0; // calculate total fine every time fine added --zamee
+float taka=0.0;
+
+float start_unit=0.0;
+float end_unit=0.0;
+float extra_unit=0.0;
 
 //For GSM Start
 #include <SoftwareSerial.h>
@@ -34,7 +40,6 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 PZEM004Tv30 pzem(10, 11); //RX and TX
 
 float A=0.0;
-float V=0.0;
 float unit=0.0;
 
 String message = "";
@@ -71,15 +76,6 @@ void pzem03(){
         A=0;
     }
 
-    float voltage = pzem.voltage();
-    if( !isnan(voltage) ){
-      V=voltage;
-      
-    } 
-    else {
-        V=0;
-    }
-
     float energy = pzem.energy();
     if( !isnan(energy) ){
       unit=energy;
@@ -91,15 +87,17 @@ void pzem03(){
   }
 
 void LcdDisplay(){
+  cost=(unit * unit_cost)+ (extra_unit*fine_amount);
+  total_fine =total_fine+(extra_unit*fine_amount);
   lcd.setCursor(9,0);
   lcd.print(A);
   lcd.setCursor(9,1);
-  lcd.print(V);
+  lcd.print(total_fine);
   lcd.setCursor(9,2);
   lcd.print(unit);
   lcd.setCursor(9,3);
-  cost=(unit * unit_cost)+fine;
   lcd.print(cost);
+  extra_unit=0.0;
   }
   
   void relay(){
@@ -140,9 +138,9 @@ void setup() {
 
   
   lcd.setCursor(0,1);
-  lcd.print("Volatage:");
+  lcd.print("Fine   : ");
   lcd.setCursor(17,1);
-  lcd.print("V");
+  lcd.print("TK");
   
   lcd.setCursor(0,2);
   lcd.print("Unit   : ");
@@ -191,7 +189,9 @@ void loop() {
       // Get data from analog sensors
       doc["cur"] = A;
       doc["unit"] = unit;
-      doc["tk"]=cost;
+      taka=(round(cost))+(total_fine/1000);
+      doc["tk"]=taka;
+      //doc["fine"] = total_fine;  // send total fine to the json file --zamee
       serializeJson(doc,Serial);
        //Serial.println(A);
       //Serial.println(W);
@@ -211,20 +211,38 @@ void loop() {
   
  if(A>CurrentLimit && j==0){
           SendTextMessage();
-          fine=fine+fine_amount;//fine for extra use
+          LcdDisplay();
           j++;
+         start_unit=unit;
+         //Serial.print("Start_unit:");
+         Serial.print(start_unit);
   }        
  if(j>=1){
      j++;
-     if(A>CurrentLimit && j>30000){
+     if(A>CurrentLimit && j>0){
+      end_unit=unit;
+      //Serial.print("End_unit:");
+      Serial.println(end_unit);
+      }
+     if(A<CurrentLimit && j<300000){
+        extra_unit=end_unit-start_unit;
+        //Serial.print("extra 1:");
+        Serial.println(extra_unit);
+        j=0;
+        }
+     if(A>CurrentLimit && j>300000){
         SendTextMessage();
-        fine=fine+fine_amount;//fine for extra use
+        
         j=1;
        }
-     if(A<CurrentLimit && j>30000)
+    if(A<CurrentLimit && j>300000)
       {
         j=0;
-       }
+        extra_unit=end_unit-start_unit;
+        //Serial.print("extra 2:");
+        Serial.println(extra_unit);
+       }   
+    
   }
   /*
   if(unit>9000){
