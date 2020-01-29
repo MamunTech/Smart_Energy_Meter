@@ -3,8 +3,7 @@ int CurrentLimit=1; //Consumer current limit.alarm sms will be send, if user use
 float unit_cost=5.5; // per unit cost 5.5 tk
 float cost=0.0;
 float fine_amount=20.0;//per unit 15 for fine
-float fine=0.0; //fine for extra use
-float total_fine = 0.0; // calculate total fine every time fine added --zamee
+float total_fine = 0.0; // calculate total fine every time fine added
 float taka=0.0;
 
 float start_unit=0.0;
@@ -219,29 +218,18 @@ void loop() {
   }        
  if(j>=1){
      j++;
-     if(A>CurrentLimit && j>0){
-      end_unit=unit;
-      //Serial.print("End_unit:");
-      Serial.println(end_unit);
-      }
-     if(A<CurrentLimit && j<300000){
+     if(A<CurrentLimit){
+        end_unit=unit;
         extra_unit=end_unit-start_unit;
         //Serial.print("extra 1:");
         Serial.println(extra_unit);
         j=0;
         }
-     if(A>CurrentLimit && j>300000){
+     if(A>CurrentLimit && j>900000){
         SendTextMessage();
-        
         j=1;
        }
-    if(A<CurrentLimit && j>300000)
-      {
-        j=0;
-        extra_unit=end_unit-start_unit;
-        //Serial.print("extra 2:");
-        Serial.println(extra_unit);
-       }   
+   
     
   }
   /*
