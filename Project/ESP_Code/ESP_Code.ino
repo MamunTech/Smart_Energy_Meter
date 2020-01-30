@@ -73,8 +73,10 @@ void handleIndex()
 /// ADC0 - CHANNEL 3 
   Cayenne.virtualWrite(3, unit);
   delay(100);
-
-int bill=round(tk);
+  
+//Decrypted
+int taka=round(tk);
+float bill=taka/10;
 float fine=(tk-bill)*1000;
 
 /// ADC0 - CHANNEL 4  
