@@ -213,7 +213,7 @@ void loop() {
           LcdDisplay();
           j++;
          start_unit=unit;
-         //Serial.print("Start_unit:");
+         Serial.print("Start_unit:");
          Serial.print(start_unit);
   }        
  if(j>=1){
@@ -221,7 +221,7 @@ void loop() {
      if(A<CurrentLimit){
         end_unit=unit;
         extra_unit=end_unit-start_unit;
-        //Serial.print("extra 1:");
+        Serial.print("extra 1:");
         Serial.println(extra_unit);
         j=0;
         }
