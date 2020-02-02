@@ -65,6 +65,10 @@ void handleIndex()
   cur = doc["cur"];
   unit = doc["unit"];
   tk = doc["tk"];
+  //Decrypted
+ int bill=round(tk);
+ float fine=(tk-bill)*1000;
+
   
   /// ADC0 - CHANNEL 2  
   Cayenne.virtualWrite(2, cur);
@@ -74,10 +78,6 @@ void handleIndex()
   Cayenne.virtualWrite(3, unit);
   delay(100);
   
-//Decrypted
-int taka=round(tk);
-float bill=taka/10;
-float fine=(tk-bill)*1000;
 
 /// ADC0 - CHANNEL 4  
   Cayenne.virtualWrite(4,bill);

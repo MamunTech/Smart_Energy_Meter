@@ -188,9 +188,9 @@ void loop() {
       // Get data from analog sensors
       doc["cur"] = A;
       doc["unit"] = unit;
-      taka=(round(cost*10))+(total_fine/1000);//encrypted
+      
+      taka=(round(cost))+(total_fine/1000);//encrypted
       doc["tk"]=taka;
-      //doc["fine"] = total_fine;  // 
       serializeJson(doc,Serial);
        //Serial.println(A);
       //Serial.println(W);
